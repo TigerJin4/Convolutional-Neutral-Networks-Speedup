@@ -115,7 +115,7 @@ void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int st
                                     sum += volume_get(filter, fx, fy, fd+2) * volume_get(in, in_x, in_y, fd+2);
                                     sum += volume_get(filter, fx, fy, fd+3) * volume_get(in, in_x, in_y, fd+3);
                                 }
-                                for (fd = filter->depth / 4 * 4; fd < filter->depth; fd++) {
+                                for (int fd = filter->depth / 4 * 4; fd < filter->depth; fd++) {
                                     sum += volume_get(filter, fx, fy, fd) * volume_get(in, in_x, in_y, fd);
                                 }
                             }
@@ -299,7 +299,7 @@ void fc_forward(fc_layer_t *l, volume_t **inputs, volume_t **outputs, int start,
                 dot += in->weights[d+2] * l->filters[i]->weights[d+2];
                 dot += in->weights[d+3] * l->filters[i]->weights[d+3];
             }
-            for(d = l->num_inputs/4*4; d < l->num_inputs; d++){
+            for(int d = l->num_inputs/4*4; d < l->num_inputs; d++){
                 dot += in->weights[d] * l->filters[i]->weights[d];
             }
             dot += l->biases->weights[i];
@@ -388,7 +388,7 @@ void softmax_forward(softmax_layer_t *l, volume_t **inputs, volume_t **outputs, 
             out->weights[i+2] = likelihoods[i+2] / total;
             out->weights[i+3] = likelihoods[i+3] / total;
         }
-        for (i = l->output_depth/4*4; i < l->output_depth; i++) {
+        for (int i = l->output_depth/4*4; i < l->output_depth; i++) {
             out->weights[i] = likelihoods[i] / total;
         }
     }
