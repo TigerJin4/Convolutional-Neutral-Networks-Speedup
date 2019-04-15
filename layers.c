@@ -105,19 +105,19 @@ void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int st
                         for(int fx = 0; fx < filter->width; fx++) {
                             int in_x = x + fx;
                             if(in_y >= 0 && in_y < in->height && in_x >=0 && in_x < in->width) {
-//                                for(int fd = 0; fd < filter->depth; fd++) {
+                                for(int fd = 0; fd < filter->depth; fd++) {
+                                    sum += volume_get(filter, fx, fy, fd) * volume_get(in, in_x, in_y, fd);
+                                }
+                                // Unrolling
+//                                for (int fd = 0; fd < filter->depth / 4 * 4; fd+=4){
+//                                    sum += volume_get(filter, fx, fy, fd) * volume_get(in, in_x, in_y, fd);
+//                                    sum += volume_get(filter, fx, fy, fd+1) * volume_get(in, in_x, in_y, fd+1);
+//                                    sum += volume_get(filter, fx, fy, fd+2) * volume_get(in, in_x, in_y, fd+2);
+//                                    sum += volume_get(filter, fx, fy, fd+3) * volume_get(in, in_x, in_y, fd+3);
+//                                }
+//                                for (int fd = filter->depth / 4 * 4; fd < filter->depth; fd++) {
 //                                    sum += volume_get(filter, fx, fy, fd) * volume_get(in, in_x, in_y, fd);
 //                                }
-                                // Unrolling
-                                for (int fd = 0; fd < filter->depth / 4 * 4; fd+=4){
-                                    sum += volume_get(filter, fx, fy, fd) * volume_get(in, in_x, in_y, fd);
-                                    sum += volume_get(filter, fx, fy, fd+1) * volume_get(in, in_x, in_y, fd+1);
-                                    sum += volume_get(filter, fx, fy, fd+2) * volume_get(in, in_x, in_y, fd+2);
-                                    sum += volume_get(filter, fx, fy, fd+3) * volume_get(in, in_x, in_y, fd+3);
-                                }
-                                for (int fd = filter->depth / 4 * 4; fd < filter->depth; fd++) {
-                                    sum += volume_get(filter, fx, fy, fd) * volume_get(in, in_x, in_y, fd);
-                                }
                             }
                         }
                     }
@@ -289,19 +289,19 @@ void fc_forward(fc_layer_t *l, volume_t **inputs, volume_t **outputs, int start,
 
         for(int i = 0; i < l->output_depth;i++) {
             double dot = 0.0;
-//            for(int d = 0; d < l->num_inputs; d++) {
+            for(int d = 0; d < l->num_inputs; d++) {
+                dot += in->weights[d] * l->filters[i]->weights[d];
+            }
+            // Unrolling
+//            for(int d = 0; d < l->num_inputs/4*4; d+=4){
+//                dot += in->weights[d] * l->filters[i]->weights[d];
+//                dot += in->weights[d+1] * l->filters[i]->weights[d+1];
+//                dot += in->weights[d+2] * l->filters[i]->weights[d+2];
+//                dot += in->weights[d+3] * l->filters[i]->weights[d+3];
+//            }
+//            for(int d = l->num_inputs/4*4; d < l->num_inputs; d++){
 //                dot += in->weights[d] * l->filters[i]->weights[d];
 //            }
-            // Unrolling
-            for(int d = 0; d < l->num_inputs/4*4; d+=4){
-                dot += in->weights[d] * l->filters[i]->weights[d];
-                dot += in->weights[d+1] * l->filters[i]->weights[d+1];
-                dot += in->weights[d+2] * l->filters[i]->weights[d+2];
-                dot += in->weights[d+3] * l->filters[i]->weights[d+3];
-            }
-            for(int d = l->num_inputs/4*4; d < l->num_inputs; d++){
-                dot += in->weights[d] * l->filters[i]->weights[d];
-            }
             dot += l->biases->weights[i];
             out->weights[i] = dot;
         }
@@ -378,18 +378,18 @@ void softmax_forward(softmax_layer_t *l, volume_t **inputs, volume_t **outputs, 
         }
 
         // Normalize and output to sum to one
-//        for(int i = 0; i < l->output_depth; i++) {
+        for(int i = 0; i < l->output_depth; i++) {
+            out->weights[i] = likelihoods[i] / total;
+        }
+        // Unrolling
+//        for(int i = 0; i < l->output_depth/4*4; i += 4){
+//            out->weights[i] = likelihoods[i] / total;
+//            out->weights[i+1] = likelihoods[i+1] / total;
+//            out->weights[i+2] = likelihoods[i+2] / total;
+//            out->weights[i+3] = likelihoods[i+3] / total;
+//        }
+//        for (int i = l->output_depth/4*4; i < l->output_depth; i++) {
 //            out->weights[i] = likelihoods[i] / total;
 //        }
-        // Unrolling
-        for(int i = 0; i < l->output_depth/4*4; i += 4){
-            out->weights[i] = likelihoods[i] / total;
-            out->weights[i+1] = likelihoods[i+1] / total;
-            out->weights[i+2] = likelihoods[i+2] / total;
-            out->weights[i+3] = likelihoods[i+3] / total;
-        }
-        for (int i = l->output_depth/4*4; i < l->output_depth; i++) {
-            out->weights[i] = likelihoods[i] / total;
-        }
     }
 }
