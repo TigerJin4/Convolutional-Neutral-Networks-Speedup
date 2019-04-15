@@ -34,7 +34,7 @@ volume_t *make_volume(int width, int height, int depth, double value) {
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
             for(int d = 0; d < depth / 4 * 4; d += 4) {
-                __m256i curr = _mm256_set1_pd(value);
+                __m256d curr = _mm256_set1_pd(value);
                 _mm256_storeu_pd(new_vol->weights[((v->width * y) + x) * v->depth + d], curr);
             }
             for (int d = depth / 4 * 4; d < dest->depth; d++) {
