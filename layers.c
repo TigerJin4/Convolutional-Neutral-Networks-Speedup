@@ -368,7 +368,17 @@ void softmax_forward(softmax_layer_t *l, volume_t **inputs, volume_t **outputs, 
         }
 
         // Normalize and output to sum to one
-        for(int i = 0; i < l->output_depth; i++) {
+//        for(int i = 0; i < l->output_depth; i++) {
+//            out->weights[i] = likelihoods[i] / total;
+//        }
+        // Unrolling
+        for(int i = 0; i < l->output_depth/4*4; i += 4){
+            out->weights[i] = likelihoods[i] / total;
+            out->weights[i+1] = likelihoods[i+1] / total;
+            out->weights[i+2] = likelihoods[i+2] / total;
+            out->weights[i+3] = likelihoods[i+3] / total;
+        }
+        for (i = l->output_depth/4*4; i < l->output_depth; i++) {
             out->weights[i] = likelihoods[i] / total;
         }
     }

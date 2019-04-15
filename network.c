@@ -107,7 +107,17 @@ batch_t *make_batch(network_t *net, int size) {
     batch_t *out = (batch_t*) malloc(sizeof(volume_t **) * (NUM_LAYERS + 1));
     for (int i = 0; i < NUM_LAYERS + 1; i++) {
         out[i] = (volume_t **) malloc(sizeof(volume_t *)*size);
-        for (int j = 0; j < size; j++) {
+//        for (int j = 0; j < size; j++) {
+//            out[i][j] = make_volume(net->layers[i]->width, net->layers[i]->height, net->layers[i]->depth, 0.0);
+//        }
+        // Unrolling
+        for(int j = 0; j < size/4*4; j += 4){
+            out[i][j] = make_volume(net->layers[i]->width, net->layers[i]->height, net->layers[i]->depth, 0.0);
+            out[i][j+1] = out[i][j];
+            out[i][j+2] = out[i][j];
+            out[i][j+3] = out[i][j];
+        }
+        for(j = size/4*4; j < size; j++){
             out[i][j] = make_volume(net->layers[i]->width, net->layers[i]->height, net->layers[i]->depth, 0.0);
         }
     }
