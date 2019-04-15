@@ -106,9 +106,10 @@ void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int st
                             for (int fx = 0; fx < filter->width; fx++) {
                                 int in_x = x + fx;
                                 if (in_y >= 0 && in_y < in->height && in_x >= 0 && in_x < in->width) {
-                                    for (int fd = 0; fd < filter->depth; fd++) {
-                                        sum += volume_get(filter, fx, fy, fd) * volume_get(in, in_x, in_y, fd);
-                                    }
+                                    //original
+//                                    for (int fd = 0; fd < filter->depth; fd++) {
+//                                        sum += volume_get(filter, fx, fy, fd) * volume_get(in, in_x, in_y, fd);
+//                                    }
 
 
                                     for(int fd = 0; fd < filter->depth / 4 * 4; fd += 4) {
