@@ -117,7 +117,7 @@ batch_t *make_batch(network_t *net, int size) {
             out[i][j+2] = out[i][j];
             out[i][j+3] = out[i][j];
         }
-        for(j = size/4*4; j < size; j++){
+        for(int j = size/4*4; j < size; j++){
             out[i][j] = out[i][0];
         }
     }
