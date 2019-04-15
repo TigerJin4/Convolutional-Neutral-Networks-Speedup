@@ -69,8 +69,9 @@ void copy_volume(volume_t *dest, volume_t *src) {
                 volume_set(dest, x, y, d+2, volume_get(src, x, y, d+2));
                 volume_set(dest, x, y, d+3, volume_get(src, x, y, d+3));
             }
-            for (int d = dest->depth/4 * 4; d < dest->depth; d ++){
+            for (int d = dest->depth/4 * 4; d < dest->depth; d ++) {
                 volume_set(dest, x, y, d, volume_get(src, x, y, d));
+            }
         }
     }
 }
