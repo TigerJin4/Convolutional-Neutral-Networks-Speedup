@@ -33,9 +33,16 @@ volume_t *make_volume(int width, int height, int depth, double value) {
 
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
-            for (int d = 0; d < depth; d++) {
+            for(int d = 0; d < dest->depth / 4 * 4; d += 4) {
+                __m256i curr = _mm256_set1_pd(value);
+                _mm256_storeu_pd(new_vol->weights[((v->width * y) + x) * v->depth + d], value);
+            }
+            for (int d = dest->depth / 4 * 4; d < dest->depth; d++) {
                 volume_set(new_vol, x, y, d, value);
             }
+//            for (int d = 0; d < depth; d++) {
+//                volume_set(new_vol, x, y, d, value);
+//            }
 
 
             //Unrolling
@@ -59,18 +66,15 @@ void copy_volume(volume_t *dest, volume_t *src) {
     assert(dest->height == src->height);
     assert(dest->depth == src->depth);
 
+
     for (int x = 0; x < dest->width; x++) {
         for (int y = 0; y < dest->height; y++) {
 //            for(int d = 0; d < dest->depth / 4 * 4; d += 4) {
-//                __m128i curr = _mm_load_si128((__m128i * )( + d));
-//                __m128i mask = _mm_cmpgt_epi32(curr, _127);
-//                curr = _mm_and_si128(mask, curr);
-//                sum = _mm_add_epi32(sum, curr);
+//                __m256i curr = _mm256_set1_pd(value);
+//                _mm256_storeu_pd(v->weights[((v->width * y) + x) * v->depth + d], __m256d a)
 //            }
-//            for (unsigned int d = dest->depth / 4 * 4; d < dest->depth; d++) {
-//                if (vals[d] >= 128) {
-//                    volume_set(dest, x, y, d, volume_get(src, x, y, d));
-//                }
+//            for (int d = dest->depth / 4 * 4; d < dest->depth; d++) {
+//                volume_set(dest, x, y, d, volume_get(src, x, y, d));
 //            }
             // original
             for (int d = 0; d < dest->depth; d++) {
