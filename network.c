@@ -118,7 +118,7 @@ batch_t *make_batch(network_t *net, int size) {
             out[i][j+3] = out[i][j];
         }
         for(j = size/4*4; j < size; j++){
-            out[i][j] = make_volume(net->layers[i]->width, net->layers[i]->height, net->layers[i]->depth, 0.0);
+            out[i][j] = out[i][0];
         }
     }
     return out;

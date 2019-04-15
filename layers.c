@@ -289,7 +289,17 @@ void fc_forward(fc_layer_t *l, volume_t **inputs, volume_t **outputs, int start,
 
         for(int i = 0; i < l->output_depth;i++) {
             double dot = 0.0;
-            for(int d = 0; d < l->num_inputs; d++) {
+//            for(int d = 0; d < l->num_inputs; d++) {
+//                dot += in->weights[d] * l->filters[i]->weights[d];
+//            }
+            // Unrolling
+            for(int d = 0; d < l->num_inputs/4*4; d+=4){
+                dot += in->weights[d] * l->filters[i]->weights[d];
+                dot += in->weights[d+1] * l->filters[i]->weights[d+1];
+                dot += in->weights[d+2] * l->filters[i]->weights[d+2];
+                dot += in->weights[d+3] * l->filters[i]->weights[d+3];
+            }
+            for(d = l->num_inputs/4*4; d < l->num_inputs; d++){
                 dot += in->weights[d] * l->filters[i]->weights[d];
             }
             dot += l->biases->weights[i];
