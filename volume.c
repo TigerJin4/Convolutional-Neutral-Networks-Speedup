@@ -31,19 +31,19 @@ volume_t *make_volume(int width, int height, int depth, double value) {
     new_vol->height = height;
     new_vol->depth = depth;
 
-    for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-            for(int d = 0; d < depth / 4 * 4; d += 4) {
-                __m256d curr = _mm256_set1_pd(value);
-                _mm256_storeu_pd(new_vol->weights+(((new_vol->width * y) + x) * new_vol->depth + d), curr);
-            }
-            for (int d = depth / 4 * 4; d < depth; d++) {
-                volume_set(new_vol, x, y, d, value);
-            }
-            //original
-//            for (int d = 0; d < depth; d++) {
+//    for (int x = 0; x < width; x++) {
+//        for (int y = 0; y < height; y++) {
+//            for(int d = 0; d < depth / 4 * 4; d += 4) {
+//                __m256d curr = _mm256_set1_pd(value);
+//                _mm256_storeu_pd(new_vol->weights+(((new_vol->width * y) + x) * new_vol->depth + d), curr);
+//            }
+//            for (int d = depth / 4 * 4; d < depth; d++) {
 //                volume_set(new_vol, x, y, d, value);
 //            }
+            //original
+            for (int d = 0; d < depth; d++) {
+                volume_set(new_vol, x, y, d, value);
+            }
 
 
             //Unrolling
@@ -70,17 +70,17 @@ void copy_volume(volume_t *dest, volume_t *src) {
 
     for (int x = 0; x < dest->width; x++) {
         for (int y = 0; y < dest->height; y++) {
-            for(int d = 0; d < dest->depth / 4 * 4; d += 4) {
-                __m256d value = _mm256_load_pd(src->weights+(((src->width * y) + x) * src->depth + d));
-                _mm256_store_pd(dest->weights+(((dest->width * y) + x) * dest->depth + d), value);
-            }
-            for (int d = dest->depth / 4 * 4; d < dest->depth; d++) {
-                volume_set(dest, x, y, d, volume_get(src, x, y, d));
-            }
-            // original
-//            for (int d = 0; d < dest->depth; d++) {
+//            for(int d = 0; d < dest->depth / 4 * 4; d += 4) {
+//                __m256d value = _mm256_load_pd(src->weights+(((src->width * y) + x) * src->depth + d));
+//                _mm256_store_pd(dest->weights+(((dest->width * y) + x) * dest->depth + d), value);
+//            }
+//            for (int d = dest->depth / 4 * 4; d < dest->depth; d++) {
 //                volume_set(dest, x, y, d, volume_get(src, x, y, d));
 //            }
+            // original
+            for (int d = 0; d < dest->depth; d++) {
+                volume_set(dest, x, y, d, volume_get(src, x, y, d));
+            }
 
             // Unrolling
 //            for(int d = 0; d < dest->depth/4 * 4; d += 4){

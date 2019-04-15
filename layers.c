@@ -113,8 +113,8 @@ void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int st
 
                                     __m256d result = _mm256_setzero_pd();
                                     for(int fd = 0; fd < filter->depth / 4 * 4; fd += 4) {
-                                        __m256d a = _mm256_load_pd(in->weights+(((in->width * in_y) + in_x) * in->depth + fd));
-                                        __m256d b = _mm256_load_pd(filter->weights+(((filter->width * fy) + fx) * filter->depth + fd));
+                                        __m256d a = _mm256_loadu_pd(in->weights+(((in->width * in_y) + in_x) * in->depth + fd));
+                                        __m256d b = _mm256_loadu_pd(filter->weights+(((filter->width * fy) + fx) * filter->depth + fd));
                                         __m256d c = _mm256_mul_pd(a, b);
                                         result = _mm256_add_pd(result, c);
                                     }
