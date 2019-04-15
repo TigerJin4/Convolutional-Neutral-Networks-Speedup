@@ -59,19 +59,19 @@ void copy_volume(volume_t *dest, volume_t *src) {
 
     for (int x = 0; x < dest->width; x++) {
         for (int y = 0; y < dest->height; y++) {
-//            for (int d = 0; d < dest->depth; d++) {
+            for (int d = 0; d < dest->depth; d++) {
+                volume_set(dest, x, y, d, volume_get(src, x, y, d));
+            }
+            // Unrolling
+//            for(int d = 0; d < dest->depth/4 * 4; d += 4){
+//                volume_set(dest, x, y, d, volume_get(src, x, y, d));
+//                volume_set(dest, x, y, d+1, volume_get(src, x, y, d+1));
+//                volume_set(dest, x, y, d+2, volume_get(src, x, y, d+2));
+//                volume_set(dest, x, y, d+3, volume_get(src, x, y, d+3));
+//            }
+//            for (int d = dest->depth/4 * 4; d < dest->depth; d ++) {
 //                volume_set(dest, x, y, d, volume_get(src, x, y, d));
 //            }
-            // Unrolling
-            for(int d = 0; d < dest->depth/4 * 4; d += 4){
-                volume_set(dest, x, y, d, volume_get(src, x, y, d));
-                volume_set(dest, x, y, d+1, volume_get(src, x, y, d+1));
-                volume_set(dest, x, y, d+2, volume_get(src, x, y, d+2));
-                volume_set(dest, x, y, d+3, volume_get(src, x, y, d+3));
-            }
-            for (int d = dest->depth/4 * 4; d < dest->depth; d ++) {
-                volume_set(dest, x, y, d, volume_get(src, x, y, d));
-            }
         }
     }
 }
