@@ -33,13 +33,13 @@ conv_layer_t *make_conv_layer(int input_width, int input_height, int input_depth
 
     l->output_width = (l->input_width + l->pad * 2 - l->filter_width) /
         l->stride + 1;
-    l->output_height = (l->input_height + l->pad * 2 -l->filter_height) /
+    l->output_height = (l->input_height + l->pad * 2 - l->filter_height) /
         l->stride + 1;
 
     l->filters = malloc(sizeof(volume_t *) * num_filters);
     for (int i = 0; i < num_filters; i++) {
-        l->filters[i] = make_volume(filter_width, filter_width,
-            input_depth, 0.0);
+        l->filters[i] = make_volume(l->filter_width, l->filter_height,
+            l->input_depth, 0.0);
     }
 
     l->bias = 0.0;
