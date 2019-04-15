@@ -112,7 +112,7 @@ batch_t *make_batch(network_t *net, int size) {
 //        }
         // Unrolling
         for(int j = 0; j < size/4*4; j += 4){
-            volume_t output = make_volume(net->layers[i]->width, net->layers[i]->height, net->layers[i]->depth, 0.0);
+            volume_t* output = make_volume(net->layers[i]->width, net->layers[i]->height, net->layers[i]->depth, 0.0);
             out[i][j] = output;
             out[i][j+1] = output;
             out[i][j+2] = output;
