@@ -161,18 +161,18 @@ void net_classify(network_t *net, volume_t **input, double **likelihoods, int n)
     }
 
 
-#pragma omp parallel
-    {
-        int num = omp_get_num_threads();
-        int chunk_size = ARRAY_SIZE/num;
-        int n = omp_get_thread_num();
-        for(int i = n * chunk_size; i < ((n + 1) * chunk_size); i++){
-            z[i] = x[i] + y[i];
-        }
-        if (n == 0) {
-            for (int i = num * chunk_size; i < ARRAY_SIZE; i++) {
-                z[i] = x[i] + y[i];
-            }
-        }
+//#pragma omp parallel
+//    {
+//        int num = omp_get_num_threads();
+//        int chunk_size = ARRAY_SIZE/num;
+//        int n = omp_get_thread_num();
+//        for(int i = n * chunk_size; i < ((n + 1) * chunk_size); i++){
+//            z[i] = x[i] + y[i];
+//        }
+//        if (n == 0) {
+//            for (int i = num * chunk_size; i < ARRAY_SIZE; i++) {
+//                z[i] = x[i] + y[i];
+//            }
+//        }
     free_batch(b, 1);
 }
