@@ -107,19 +107,19 @@ batch_t *make_batch(network_t *net, int size) {
     batch_t *out = (batch_t*) malloc(sizeof(volume_t **) * (NUM_LAYERS + 1));
     for (int i = 0; i < NUM_LAYERS + 1; i++) {
         out[i] = (volume_t **) malloc(sizeof(volume_t *)*size);
-//        for (int j = 0; j < size; j++) {
+        for (int j = 0; j < size; j++) {
+            out[i][j] = make_volume(net->layers[i]->width, net->layers[i]->height, net->layers[i]->depth, 0.0);
+        }
+        // Unrolling
+//        for(int j = 0; j < size/4*4; j += 4){
+//            out[i][j] = make_volume(net->layers[i]->width, net->layers[i]->height, net->layers[i]->depth, 0.0);
+//            out[i][j+1] = make_volume(net->layers[i]->width, net->layers[i]->height, net->layers[i]->depth, 0.0);
+//            out[i][j+2] = make_volume(net->layers[i]->width, net->layers[i]->height, net->layers[i]->depth, 0.0);
+//            out[i][j+3] = make_volume(net->layers[i]->width, net->layers[i]->height, net->layers[i]->depth, 0.0);
+//        }
+//        for(int j = size/4*4; j < size; j++){
 //            out[i][j] = make_volume(net->layers[i]->width, net->layers[i]->height, net->layers[i]->depth, 0.0);
 //        }
-        // Unrolling
-        for(int j = 0; j < size/4*4; j += 4){
-            out[i][j] = make_volume(net->layers[i]->width, net->layers[i]->height, net->layers[i]->depth, 0.0);
-            out[i][j+1] = make_volume(net->layers[i]->width, net->layers[i]->height, net->layers[i]->depth, 0.0);
-            out[i][j+2] = make_volume(net->layers[i]->width, net->layers[i]->height, net->layers[i]->depth, 0.0);
-            out[i][j+3] = make_volume(net->layers[i]->width, net->layers[i]->height, net->layers[i]->depth, 0.0);
-        }
-        for(int j = size/4*4; j < size; j++){
-            out[i][j] = make_volume(net->layers[i]->width, net->layers[i]->height, net->layers[i]->depth, 0.0);
-        }
     }
     return out;
 }
@@ -151,13 +151,27 @@ void net_forward(network_t *net, batch_t *b, int start, int end) {
 void net_classify(network_t *net, volume_t **input, double **likelihoods, int n) {
     batch_t *b = make_batch(net, 1);
 
-    for (int i = 0; i < n; i++) {
-        copy_volume(b[0][0], input[i]);
-        net_forward(net, b, 0, 0);
-        for (int j = 0; j < NUM_CLASSES; j++) {
-            likelihoods[i][j] = b[11][0]->weights[j];
+    #pragma omp parallel
+    {
+        int gap = omp_get_num_threads();
+        int k = omp_get_thread_num();
+        for (int i = k; i < n; i += gap)
+            copy_volume(b[0][0], input[i]);
+            net_forward(net, b, 0, 0);
+            for (int j = 0; j < NUM_CLASSES; j++) {
+                likelihoods[i][j] = b[11][0]->weights[j];
         }
     }
+
+
+// Original
+//    for (int i = 0; i < n; i++) {
+//        copy_volume(b[0][0], input[i]);
+//        net_forward(net, b, 0, 0);
+//        for (int j = 0; j < NUM_CLASSES; j++) {
+//            likelihoods[i][j] = b[11][0]->weights[j];
+//        }
+//    }
 
     free_batch(b, 1);
 }
