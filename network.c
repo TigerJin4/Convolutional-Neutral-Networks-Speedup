@@ -153,14 +153,13 @@ void net_classify(network_t *net, volume_t **input, double **likelihoods, int n)
 
     #pragma omp parallel
     {
-        int gap = omp_get_num_threads();
-        int k = omp_get_thread_num();
-        int i;
-        for (i = k; i < n; i += gap)
+        #pragma omp for
+        for (int i = 0; i < n; i++) {
             copy_volume(b[0][0], input[i]);
             net_forward(net, b, 0, 0);
             for (int j = 0; j < NUM_CLASSES; j++) {
                 likelihoods[i][j] = b[11][0]->weights[j];
+            }
         }
     }
 
