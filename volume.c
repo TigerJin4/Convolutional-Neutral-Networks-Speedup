@@ -35,11 +35,12 @@ volume_t *make_volume(int width, int height, int depth, double value) {
         for (int y = 0; y < height; y++) {
             for(int d = 0; d < depth / 4 * 4; d += 4) {
                 __m256d curr = _mm256_set1_pd(value);
-                _mm256_storeu_pd(new_vol->weights[((new_vol->width * y) + x) * new_vol->depth + d], curr);
+                _mm256_storeu_pd(&(new_vol->weights[((new_vol->width * y) + x) * new_vol->depth + d]), curr);
             }
             for (int d = depth / 4 * 4; d < depth; d++) {
                 volume_set(new_vol, x, y, d, value);
             }
+            //original
 //            for (int d = 0; d < depth; d++) {
 //                volume_set(new_vol, x, y, d, value);
 //            }
