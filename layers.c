@@ -85,31 +85,33 @@ conv_layer_t *make_conv_layer(int input_width, int input_height, int input_depth
 // at a coordinate (x, y, d). Finally, we add the corresponding bias for the
 // filter to the sum before putting it into the output volume.
 void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int start, int end) {
-    #pragma omp for
-    for (int i = start; i <= end; i++) {
-        volume_t *in = inputs[i];
-        volume_t *out = outputs[i];
+    #pragma omp parallel
+    {
+        #pragma omp for
+        for (int i = start; i <= end; i++) {
+            volume_t *in = inputs[i];
+            volume_t *out = outputs[i];
 
-        int stride = l->stride;
+            int stride = l->stride;
 
-        for(int f = 0; f < l->output_depth; f++) {
-            volume_t *filter = l->filters[f];
-            int y = -l->pad;
-            for(int out_y = 0; out_y < l->output_height; y += stride, out_y++) {
-                int x = -l->pad;
-                for(int out_x = 0; out_x < l->output_width; x += stride, out_x++) {
+            for (int f = 0; f < l->output_depth; f++) {
+                volume_t *filter = l->filters[f];
+                int y = -l->pad;
+                for (int out_y = 0; out_y < l->output_height; y += stride, out_y++) {
+                    int x = -l->pad;
+                    for (int out_x = 0; out_x < l->output_width; x += stride, out_x++) {
 
-                    // Take sum of element-wise product
-                    double sum = 0.0;
-                    for(int fy = 0; fy < filter->height; fy++) {
-                        int in_y = y + fy;
-                        for(int fx = 0; fx < filter->width; fx++) {
-                            int in_x = x + fx;
-                            if(in_y >= 0 && in_y < in->height && in_x >=0 && in_x < in->width) {
-                                for(int fd = 0; fd < filter->depth; fd++) {
-                                    sum += volume_get(filter, fx, fy, fd) * volume_get(in, in_x, in_y, fd);
-                                }
-                                // Unrolling
+                        // Take sum of element-wise product
+                        double sum = 0.0;
+                        for (int fy = 0; fy < filter->height; fy++) {
+                            int in_y = y + fy;
+                            for (int fx = 0; fx < filter->width; fx++) {
+                                int in_x = x + fx;
+                                if (in_y >= 0 && in_y < in->height && in_x >= 0 && in_x < in->width) {
+                                    for (int fd = 0; fd < filter->depth; fd++) {
+                                        sum += volume_get(filter, fx, fy, fd) * volume_get(in, in_x, in_y, fd);
+                                    }
+                                    // Unrolling
 //                                for (int fd = 0; fd < filter->depth / 4 * 4; fd+=4){
 //                                    sum += volume_get(filter, fx, fy, fd) * volume_get(in, in_x, in_y, fd);
 //                                    sum += volume_get(filter, fx, fy, fd+1) * volume_get(in, in_x, in_y, fd+1);
@@ -119,12 +121,13 @@ void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int st
 //                                for (int fd = filter->depth / 4 * 4; fd < filter->depth; fd++) {
 //                                    sum += volume_get(filter, fx, fy, fd) * volume_get(in, in_x, in_y, fd);
 //                                }
+                                }
                             }
                         }
-                    }
 
-                    sum += l->biases->weights[f];
-                    volume_set(out, out_x, out_y, f, sum);
+                        sum += l->biases->weights[f];
+                        volume_set(out, out_x, out_y, f, sum);
+                    }
                 }
             }
         }
