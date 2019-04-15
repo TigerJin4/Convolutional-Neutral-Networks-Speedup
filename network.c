@@ -155,7 +155,8 @@ void net_classify(network_t *net, volume_t **input, double **likelihoods, int n)
     {
         int gap = omp_get_num_threads();
         int k = omp_get_thread_num();
-        for (int i = k; i < n; i += gap)
+        int i;
+        for (i = k; i < n; i += gap)
             copy_volume(b[0][0], input[i]);
             net_forward(net, b, 0, 0);
             for (int j = 0; j < NUM_CLASSES; j++) {
