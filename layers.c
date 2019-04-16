@@ -120,8 +120,8 @@ void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int st
 //                                        sum += volume_get(filter, fx, fy, fd) * volume_get(in, in_x, in_y, fd);
 //                                    }
                                     if (filter->depth == 3){
-                                        __m256d a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + fd));
-                                        __m256d b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + fd));
+                                        __m256d a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 0));
+                                        __m256d b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 0));
                                         __m256d c = _mm256_mul_pd(a, b);
                                         result = _mm256_add_pd(result, c);
                                         double* res = (double*) calloc(4, sizeof(double));
