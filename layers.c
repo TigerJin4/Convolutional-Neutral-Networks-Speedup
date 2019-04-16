@@ -18,7 +18,7 @@
 #include "volume.h"
 
 conv_layer_t *make_conv_layer(int input_width, int input_height, int input_depth, int filter_width, int num_filters,
-        int stride, int pad) {
+                              int stride, int pad) {
     conv_layer_t *l = (conv_layer_t *) malloc(sizeof(conv_layer_t));
 
     l->output_depth = num_filters;
@@ -32,14 +32,14 @@ conv_layer_t *make_conv_layer(int input_width, int input_height, int input_depth
     l->pad = pad;
 
     l->output_width = (input_width + pad * 2 - filter_width) /
-        stride + 1;
+                      stride + 1;
     l->output_height = (input_height + pad * 2 - l->filter_height) /
-        stride + 1;
+                       stride + 1;
 
     l->filters = malloc(sizeof(volume_t *) * num_filters);
     for (int i = 0; i < num_filters; i++) {
         l->filters[i] = make_volume(filter_width, l->filter_height,
-            input_depth, 0.0);
+                                    input_depth, 0.0);
     }
 
     l->bias = 0.0;
@@ -85,108 +85,108 @@ conv_layer_t *make_conv_layer(int input_width, int input_height, int input_depth
 // at a coordinate (x, y, d). Finally, we add the corresponding bias for the
 // filter to the sum before putting it into the output volume.
 void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int start, int end) {
-        for (int i = start; i <= end; i++) {
-            volume_t *in = inputs[i];
-            volume_t *out = outputs[i];
-            int in_width = in->width;
-            double* in_weights = in->weights;
-            int in_depth = in->depth;
-            int in_height = in->height;
+    for (int i = start; i <= end; i++) {
+        volume_t *in = inputs[i];
+        volume_t *out = outputs[i];
+        int in_width = in->width;
+        double* in_weights = in->weights;
+        int in_depth = in->depth;
+        int in_height = in->height;
 
 
-            int stride = l->stride;
+        int stride = l->stride;
 
-            for (int f = 0; f < l->output_depth; f++) {
-                volume_t *filter = l->filters[f];
-                double* f_weights = filter->weights;
-                int f_width = filter->width;
-                int f_depth = filter->depth;
-                int f_height = filter->height;
-                int y = -l->pad;
-                for (int out_y = 0; out_y < l->output_height; y += stride, out_y++) {
-                    int x = -l->pad;
-                    for (int out_x = 0; out_x < l->output_width; x += stride, out_x++) {
+        for (int f = 0; f < l->output_depth; f++) {
+            volume_t *filter = l->filters[f];
+            double* f_weights = filter->weights;
+            int f_width = filter->width;
+            int f_depth = filter->depth;
+            int f_height = filter->height;
+            int y = -l->pad;
+            for (int out_y = 0; out_y < l->output_height; y += stride, out_y++) {
+                int x = -l->pad;
+                for (int out_x = 0; out_x < l->output_width; x += stride, out_x++) {
 
-                        // Take sum of element-wise product
-                        double sum = 0.0;
-                        __m256d result = _mm256_setzero_pd();
-                        for (int fy = 0; fy < f_height; fy++) {
-                            int in_y = y + fy;
-                            for (int fx = 0; fx < f_width; fx++) {
-                                int in_x = x + fx;
-                                if (in_y >= 0 && in_y < in_height && in_x >= 0 && in_x < in_width) {
-                                    //original
+                    // Take sum of element-wise product
+                    double sum = 0.0;
+                    __m256d result = _mm256_setzero_pd();
+                    for (int fy = 0; fy < f_height; fy++) {
+                        int in_y = y + fy;
+                        for (int fx = 0; fx < f_width; fx++) {
+                            int in_x = x + fx;
+                            if (in_y >= 0 && in_y < in_height && in_x >= 0 && in_x < in_width) {
+                                //original
 //                                    for (int fd = 0; fd < filter->depth; fd++) {
 //                                        sum += volume_get(filter, fx, fy, fd) * volume_get(in, in_x, in_y, fd);
 //                                    }
 
 //                                    __m256d result = _mm256_setzero_pd();
-                                    if (filter->depth == 3){
-                                        __m256d a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 0));
-                                        __m256d b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 0));
-                                        __m256d c = _mm256_mul_pd(a, b);
-                                        result = _mm256_add_pd(result, c);
+                                if (filter->depth == 3){
+                                    __m256d a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 0));
+                                    __m256d b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 0));
+                                    __m256d c = _mm256_mul_pd(a, b);
+                                    result = _mm256_add_pd(result, c);
 //                                        double* res = (double*) calloc(4, sizeof(double));
 //                                        _mm256_storeu_pd(res, result);
 //                                        sum += res[0] + res[1] + res[2];
 //                                        free(res);
-                                    }
-                                    else if (filter->depth == 16){
-                                        __m256d a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 0));
-                                        __m256d b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 0));
-                                        __m256d c = _mm256_mul_pd(a, b);
-                                        result = _mm256_add_pd(result, c);
+                                }
+                                else if (filter->depth == 16){
+                                    __m256d a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 0));
+                                    __m256d b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 0));
+                                    __m256d c = _mm256_mul_pd(a, b);
+                                    result = _mm256_add_pd(result, c);
 
-                                        a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 4));
-                                        b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 4));
-                                        c = _mm256_mul_pd(a, b);
-                                        result = _mm256_add_pd(result, c);
+                                    a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 4));
+                                    b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 4));
+                                    c = _mm256_mul_pd(a, b);
+                                    result = _mm256_add_pd(result, c);
 
-                                        a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 8));
-                                        b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 8));
-                                        c = _mm256_mul_pd(a, b);
-                                        result = _mm256_add_pd(result, c);
+                                    a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 8));
+                                    b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 8));
+                                    c = _mm256_mul_pd(a, b);
+                                    result = _mm256_add_pd(result, c);
 
-                                        a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 12));
-                                        b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 12));
-                                        c = _mm256_mul_pd(a, b);
-                                        result = _mm256_add_pd(result, c);
+                                    a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 12));
+                                    b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 12));
+                                    c = _mm256_mul_pd(a, b);
+                                    result = _mm256_add_pd(result, c);
 
 //                                        double* res = (double*) calloc(4, sizeof(double));
 //                                        _mm256_storeu_pd(res, result);
 //                                        sum += res[0] + res[1] + res[2] + res[3];
 //                                        free(res);
-                                    }
-                                    else if (filter->depth == 20){
-                                        __m256d a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 0));
-                                        __m256d b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 0));
-                                        __m256d c = _mm256_mul_pd(a, b);
-                                        result = _mm256_add_pd(result, c);
+                                }
+                                else if (filter->depth == 20){
+                                    __m256d a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 0));
+                                    __m256d b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 0));
+                                    __m256d c = _mm256_mul_pd(a, b);
+                                    result = _mm256_add_pd(result, c);
 
-                                        a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 4));
-                                        b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 4));
-                                        c = _mm256_mul_pd(a, b);
-                                        result = _mm256_add_pd(result, c);
+                                    a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 4));
+                                    b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 4));
+                                    c = _mm256_mul_pd(a, b);
+                                    result = _mm256_add_pd(result, c);
 
-                                        a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 8));
-                                        b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 8));
-                                        c = _mm256_mul_pd(a, b);
-                                        result = _mm256_add_pd(result, c);
+                                    a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 8));
+                                    b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 8));
+                                    c = _mm256_mul_pd(a, b);
+                                    result = _mm256_add_pd(result, c);
 
-                                        a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 12));
-                                        b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 12));
-                                        c = _mm256_mul_pd(a, b);
-                                        result = _mm256_add_pd(result, c);
+                                    a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 12));
+                                    b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 12));
+                                    c = _mm256_mul_pd(a, b);
+                                    result = _mm256_add_pd(result, c);
 
-                                        a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 16));
-                                        b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 16));
-                                        c = _mm256_mul_pd(a, b);
-                                        result = _mm256_add_pd(result, c);
+                                    a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 16));
+                                    b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 16));
+                                    c = _mm256_mul_pd(a, b);
+                                    result = _mm256_add_pd(result, c);
 //                                        double* res = (double*) calloc(4, sizeof(double));
 //                                        _mm256_storeu_pd(res, result);
 //                                        sum += res[0] + res[1] + res[2] + res[3];
 //                                        free(res);
-                                    }
+                                }
 
 //                                    for(int fd = 0; fd < filter->depth / 4 * 4; fd += 4) {
 //                                        __m256d a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + fd));
@@ -199,20 +199,20 @@ void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int st
 //                                        sum += volume_get(filter, fx, fy, fd) * volume_get(in, in_x, in_y, fd);
 //                                    }
 
-                                }
                             }
                         }
-                        double* res = (double*) calloc(4, sizeof(double));
-                        _mm256_storeu_pd(res, result);
-                        sum += res[0] + res[1] + res[2] + res[3];
-                        free(res);
-
-                        sum += l->biases->weights[f];
-                        volume_set(out, out_x, out_y, f, sum);
                     }
+                    double* res = (double*) calloc(4, sizeof(double));
+                    _mm256_storeu_pd(res, result);
+                    sum += res[0] + res[1] + res[2] + res[3];
+                    free(res);
+
+                    sum += l->biases->weights[f];
+                    volume_set(out, out_x, out_y, f, sum);
                 }
             }
         }
+    }
 }
 
 void conv_load(conv_layer_t *l, const char *file_name) {
@@ -340,7 +340,6 @@ void pool_forward(pool_layer_t *l, volume_t **inputs, volume_t **outputs, int st
                             int in_x = x + fx;
                             if(in_x >= 0 && in_x < in_width && in_y >= 0 && in_y < in_height) {
                                 double v = volume_get(in, in_x, in_y, d);
-                                //in->weights[((in->width * in_y) + in_x) * ->depth + d]
                                 if(v > max) {
                                     max = v;
                                 }
