@@ -45,23 +45,23 @@ volume_t *make_volume(int width, int height, int depth, double value) {
 //            }
 
 //            original
-            for (int d = 0; d < depth; d++) {
-                newvol_weights[((width * y) + x) * depth + d] = value;
-                //volume_set(new_vol, x, y, d, value);
-
-            }
+//            for (int d = 0; d < depth; d++) {
+//                newvol_weights[((width * y) + x) * depth + d] = value;
+//                //volume_set(new_vol, x, y, d, value);
+//
+//            }
 
 
 //            //Unrolling
-//            for(int d = 0; d < depth/4 * 4; d += 4){
-//                volume_set(new_vol, x, y, d, value);
-//                volume_set(new_vol, x, y, d+1, value);
-//                volume_set(new_vol, x, y, d+2, value);
-//                volume_set(new_vol, x, y, d+3, value);
-//            }
-//            for (int d = depth/4 * 4; d < depth; d ++){
-//                volume_set(new_vol, x, y, d, value);
-//            }
+            for(int d = 0; d < depth/4 * 4; d += 4){
+                newvol_weights[((width * y) + x) * depth + d] = value;
+                newvol_weights[((width * y) + x) * depth + d+2] = value;
+                newvol_weights[((width * y) + x) * depth + d+3] = value;
+                newvol_weights[((width * y) + x) * depth + d+4] = value;
+            }
+            for (int d = depth/4 * 4; d < depth; d ++){
+                newvol_weights[((width * y) + x) * depth + d] = value;
+            }
         }
     }
 
@@ -96,43 +96,27 @@ void copy_volume(volume_t *dest, volume_t *src) {
 //            }
 
 //             original
-            for (int d = 0; d < dest->depth; d++) {
-                //volume_set(dest, x, y, d, s_weights[((s_width * y) + x) * s_depth + d]);
-
-                d_weights[((d_width * y) + x) * d_depth + d] = s_weights[((s_width * y) + x) * s_depth + d];
-
-                //volume_set(dest, x, y, d, volume_get(src, x, y, d));
-            }
+//            for (int d = 0; d < dest->depth; d++) {
+//                //volume_set(dest, x, y, d, s_weights[((s_width * y) + x) * s_depth + d]);
+//
+//                d_weights[((d_width * y) + x) * d_depth + d] = s_weights[((s_width * y) + x) * s_depth + d];
+//
+//                //volume_set(dest, x, y, d, volume_get(src, x, y, d));
+//            }
 
             // Unrolling
-//            for(int d = 0; d < dest->depth/4 * 4; d += 4){
-//                d_weights[((d_width * y) + x) * d_depth + d] = s_weights[((s_width * y) + x) * s_depth + d];
-//                d_weights[((d_width * y) + x) * d_depth + d+1] = s_weights[((s_width * y) + x) * s_depth + d+1];
-//                d_weights[((d_width * y) + x) * d_depth + d+2] = s_weights[((s_width * y) + x) * s_depth + d+2];
-//                d_weights[((d_width * y) + x) * d_depth + d+3] = s_weights[((s_width * y) + x) * s_depth + d+3];
-//            }
-//            for (int d = dest->depth/4 * 4; d < dest->depth; d ++) {
-//                d_weights[((d_width * y) + x) * d_depth + d] = s_weights[((s_width * y) + x) * s_depth + d];
-//            }
+            for(int d = 0; d < dest->depth/4 * 4; d += 4){
+                d_weights[((d_width * y) + x) * d_depth + d] = s_weights[((s_width * y) + x) * s_depth + d];
+                d_weights[((d_width * y) + x) * d_depth + d+1] = s_weights[((s_width * y) + x) * s_depth + d+1];
+                d_weights[((d_width * y) + x) * d_depth + d+2] = s_weights[((s_width * y) + x) * s_depth + d+2];
+                d_weights[((d_width * y) + x) * d_depth + d+3] = s_weights[((s_width * y) + x) * s_depth + d+3];
+            }
+            for (int d = dest->depth/4 * 4; d < dest->depth; d ++) {
+                d_weights[((d_width * y) + x) * d_depth + d] = s_weights[((s_width * y) + x) * s_depth + d];
+            }
         }
     }
-
-//    __m128i sum = _mm_setzero_si128();
-//    for(unsigned int i = 0; i < NUM_ELEMS / 4 * 4; i += 4) {
-//        __m128i curr = _mm_load_si128((__m128i*) (vals + i));
-//        __m128i mask = _mm_cmpgt_epi32(curr, _127);
-//        curr = _mm_and_si128(mask, curr);
-//        sum = _mm_add_epi32(sum, curr);
-//    }
-//    int res[4] = { 0 };
-//    _mm_store_si128((__m128i*) res, sum);
-//    result += res[0] + res[1] + res[2] + res[3];
-//
-//    for (unsigned int i = NUM_ELEMS / 4 * 4; i < NUM_ELEMS; i++) {
-//        if (vals[i] >= 128) {
-//            result += vals[i];
-//        }
-//    }
+    
 }
 
 void free_volume(volume_t *v) {
