@@ -268,16 +268,10 @@ void relu_forward(relu_layer_t *l, volume_t **inputs, volume_t **outputs, int st
     int height = l->input_height;
     int depth = l->input_depth;
     for (int i = start; i <= end; i++) {
-        volume_t * input_vol = inputs[i];
-        double *input_weights = input_vol->weights;
-        int input_width = input_vol->width;
-        int input_height = input_vol->depth;
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 for (int d = 0; d < depth; d++) {
-                    //input_weights[((input_width * y) + x) * input_height + d]
-                    //double value = (input_weights[((input_width * y) + x) * input_height + d] < 0.0) ? 0.0 : input_weights[((input_width * y) + x) * input_height + d];
-                    double value = (volume_get(input_vol, x, y, d) < 0.0) ? 0.0 : volume_get(input_vol, x, y, d);
+                    double value = (volume_get(inputs[i], x, y, d) < 0.0) ? 0.0 : volume_get(inputs[i], x, y, d);
                     volume_set(outputs[i], x, y, d, value);
                 }
             }
@@ -322,8 +316,6 @@ void pool_forward(pool_layer_t *l, volume_t **inputs, volume_t **outputs, int st
         volume_t *out = outputs[i];
         int in_height = in->height;
         int in_width = in->width;
-        int in_depth = in->depth;
-        double* in_weights = in->weights;
         int output_depth = l->output_depth;
         int output_width = l->output_width;
         int output_height = l->output_height;
@@ -347,8 +339,8 @@ void pool_forward(pool_layer_t *l, volume_t **inputs, volume_t **outputs, int st
                             int in_y = y + fy;
                             int in_x = x + fx;
                             if(in_x >= 0 && in_x < in_width && in_y >= 0 && in_y < in_height) {
-                                //double v = in_weights[((in_width * in_y) + in_x) * in_depth + d];
-                                double v = volume_get(in, x, y, d);
+                                double v = volume_get(in, in_x, in_y, d);
+                                //in->weights[((in->width * in_y) + in_x) * ->depth + d]
                                 if(v > max) {
                                     max = v;
                                 }
