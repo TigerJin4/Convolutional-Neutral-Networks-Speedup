@@ -332,24 +332,27 @@ void fc_forward(fc_layer_t *l, volume_t **inputs, volume_t **outputs, int start,
 
         for(int i = 0; i < l->output_depth;i++) {
             double dot = 0.0;
-            for(int d = 0; d < l->num_inputs; d++) {
+            //original
+//            for(int d = 0; d < l->num_inputs; d++) {
+//                dot += in->weights[d] * l->filters[i]->weights[d];
+//            }
+            // Unrolling
+            for(int d = 0; d < l->num_inputs/4*4; d+=4){
+                dot += in->weights[d] * l->filters[i]->weights[d];
+                dot += in->weights[d+1] * l->filters[i]->weights[d+1];
+                dot += in->weights[d+2] * l->filters[i]->weights[d+2];
+                dot += in->weights[d+3] * l->filters[i]->weights[d+3];
+            }
+            for(int d = l->num_inputs/4*4; d < l->num_inputs; d++){
                 dot += in->weights[d] * l->filters[i]->weights[d];
             }
-            // Unrolling
-//            for(int d = 0; d < l->num_inputs/4*4; d+=4){
-//                dot += in->weights[d] * l->filters[i]->weights[d];
-//                dot += in->weights[d+1] * l->filters[i]->weights[d+1];
-//                dot += in->weights[d+2] * l->filters[i]->weights[d+2];
-//                dot += in->weights[d+3] * l->filters[i]->weights[d+3];
-//            }
-//            for(int d = l->num_inputs/4*4; d < l->num_inputs; d++){
-//                dot += in->weights[d] * l->filters[i]->weights[d];
-//            }
             dot += l->biases->weights[i];
             out->weights[i] = dot;
         }
     }
 }
+
+
 
 void fc_load(fc_layer_t *l, const char *filename) {
     FILE *fin = fopen(filename, "r");
@@ -421,18 +424,18 @@ void softmax_forward(softmax_layer_t *l, volume_t **inputs, volume_t **outputs, 
         }
 
         // Normalize and output to sum to one
-        for(int i = 0; i < l->output_depth; i++) {
+//        for(int i = 0; i < l->output_depth; i++) {
+//            out->weights[i] = likelihoods[i] / total;
+//        }
+        // Unrolling
+        for(int i = 0; i < l->output_depth/4*4; i += 4){
+            out->weights[i] = likelihoods[i] / total;
+            out->weights[i+1] = likelihoods[i+1] / total;
+            out->weights[i+2] = likelihoods[i+2] / total;
+            out->weights[i+3] = likelihoods[i+3] / total;
+        }
+        for (int i = l->output_depth/4*4; i < l->output_depth; i++) {
             out->weights[i] = likelihoods[i] / total;
         }
-        // Unrolling
-//        for(int i = 0; i < l->output_depth/4*4; i += 4){
-//            out->weights[i] = likelihoods[i] / total;
-//            out->weights[i+1] = likelihoods[i+1] / total;
-//            out->weights[i+2] = likelihoods[i+2] / total;
-//            out->weights[i+3] = likelihoods[i+3] / total;
-//        }
-//        for (int i = l->output_depth/4*4; i < l->output_depth; i++) {
-//            out->weights[i] = likelihoods[i] / total;
-//        }
     }
 }
