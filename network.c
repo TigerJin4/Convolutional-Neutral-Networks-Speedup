@@ -152,15 +152,15 @@ void net_classify(network_t *net, volume_t **input, double **likelihoods, int n)
 
 
 // Original
-    batch_t *b = make_batch(net, 1);
-    for (int i = 0; i < n; i++) {
-        copy_volume(b[0][0], input[i]);
-        net_forward(net, b, 0, 0);
-        for (int j = 0; j < NUM_CLASSES; j++) {
-            likelihoods[i][j] = b[11][0]->weights[j];
-        }
-    }
-    free_batch(b, 1);
+//    batch_t *b = make_batch(net, 1);
+//    for (int i = 0; i < n; i++) {
+//        copy_volume(b[0][0], input[i]);
+//        net_forward(net, b, 0, 0);
+//        for (int j = 0; j < NUM_CLASSES; j++) {
+//            likelihoods[i][j] = b[11][0]->weights[j];
+//        }
+//    }
+//    free_batch(b, 1);
 
 //#pragma omp parallel
 //    {
@@ -174,5 +174,79 @@ void net_classify(network_t *net, volume_t **input, double **likelihoods, int n)
 //            }
 //        }
 //    free_batch(b, 1);
+//    }
+#pragma omp parallel
+    {
+        batch_t *b = make_batch(net, 1);
+        #pragma omp for
+        for (int i = 0; i < n/4*4; i+=4) {
+            copy_volume(b[0][0], input[i]);
+            net_forward(net, b, 0, 0);
+            for (int j = 0; j < NUM_CLASSES/4*4; j+=4) {
+                likelihoods[i][j] = b[11][0]->weights[j];
+                likelihoods[i][j+1] = b[11][0]->weights[j+1];
+                likelihoods[i][j+2] = b[11][0]->weights[j+2];
+                likelihoods[i][j+3] = b[11][0]->weights[j+3];
+            }
+            for(int d = NUM_CLASSES/4*4; d < NUM_CLASSES; d++){
+                likelihoods[i][j] = b[11][0]->weights[j];
+            }
+
+
+            copy_volume(b[0][0], input[i+1]);
+            net_forward(net, b, 0, 0);
+            for (int j = 0; j < NUM_CLASSES/4*4; j+=4) {
+                likelihoods[i+1][j] = b[11][0]->weights[j];
+                likelihoods[i+1][j+1] = b[11][0]->weights[j+1];
+                likelihoods[i+1][j+2] = b[11][0]->weights[j+2];
+                likelihoods[i+1][j+3] = b[11][0]->weights[j+3];
+            }
+            for(int d = NUM_CLASSES/4*4; d < NUM_CLASSES; d++){
+                likelihoods[i+1][j] = b[11][0]->weights[j];
+            }
+
+
+            copy_volume(b[0][0], input[i+2]);
+            net_forward(net, b, 0, 0);
+            for (int j = 0; j < NUM_CLASSES/4*4; j+=4) {
+                likelihoods[i+2][j] = b[11][0]->weights[j];
+                likelihoods[i+2][j+1] = b[11][0]->weights[j+1];
+                likelihoods[i+2][j+2] = b[11][0]->weights[j+2];
+                likelihoods[i+2][j+3] = b[11][0]->weights[j+3];
+            }
+            for(int d = NUM_CLASSES/4*4; d < NUM_CLASSES; d++){
+                likelihoods[i+2][j] = b[11][0]->weights[j];
+            }
+
+
+            copy_volume(b[0][0], input[i+3]);
+            net_forward(net, b, 0, 0);
+            for (int j = 0; j < NUM_CLASSES/4*4; j+=4) {
+                likelihoods[i+3][j] = b[11][0]->weights[j];
+                likelihoods[i+3][j+1] = b[11][0]->weights[j+1];
+                likelihoods[i+3][j+2] = b[11][0]->weights[j+2];
+                likelihoods[i+3][j+3] = b[11][0]->weights[j+3];
+            }
+            for(int d = NUM_CLASSES/4*4; d < NUM_CLASSES; d++){
+                likelihoods[i+3][j] = b[11][0]->weights[j];
+            }
+        }
+        free_batch(b, 1);
+    }
+
+
+//#pragma omp parallel
+//    {
+//        int num = omp_get_num_threads();
+//        batch_t *b = make_batch(net, num);
+//        int chunk_size = n/omp_get_num_threads();
+//        for (int i = n * chunk_size; i<((n + 1) * chunk_size); i++) {
+//            copy_volume(b[0][0], input[i]);
+//            net_forward(net, b, 0, 0);
+//            for (int j = 0; j < NUM_CLASSES; j++) {
+//                likelihoods[i][j] = b[11][0]->weights[j];
+//            }
+//        }
+//        free_batch(b, num);
 //    }
 }
