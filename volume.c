@@ -112,7 +112,7 @@ void copy_volume(volume_t *dest, volume_t *src) {
                 d_weights[((d_width * y) + x) * d_depth + d+3] = s_weights[((s_width * y) + x) * s_depth + d+3];
             }
             for (int d = dest->depth/4 * 4; d < dest->depth; d ++) {
-                d_weights[((d_width * y) + x) * d_depth + d+3] = s_weights[((s_width * y) + x) * s_depth + d+3];
+                d_weights[((d_width * y) + x) * d_depth + d] = s_weights[((s_width * y) + x) * s_depth + d];
             }
         }
     }
