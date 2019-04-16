@@ -89,6 +89,7 @@ void copy_volume(volume_t *dest, volume_t *src) {
                 volume_set(dest, x, y, d, v);
             }
         }
+    }
 
             // Unrolling
 //            for(int d = 0; d < dest->depth/4 * 4; d += 4){
