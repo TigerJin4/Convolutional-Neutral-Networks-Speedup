@@ -271,7 +271,7 @@ void relu_forward(relu_layer_t *l, volume_t **inputs, volume_t **outputs, int st
         volume_t * input_vol = inputs[i];
         double *input_weights = input_vol->weights;
         int input_width = input_vol->width;
-        int input_height = input_vol->depth
+        int input_height = input_vol->depth;
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 for (int d = 0; d < depth; d++) {
@@ -345,7 +345,7 @@ void pool_forward(pool_layer_t *l, volume_t **inputs, volume_t **outputs, int st
                             int in_y = y + fy;
                             int in_x = x + fx;
                             if(in_x >= 0 && in_x < in_width && in_y >= 0 && in_y < in_height) {
-                                double v = in_weights[((in_width * in_y) + in_x) * in->depth + d]
+                                double v = in_weights[((in_width * in_y) + in_x) * in->depth + d];
                                 if(v > max) {
                                     max = v;
                                 }
