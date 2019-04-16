@@ -41,10 +41,10 @@ volume_t *make_volume(int width, int height, int depth, double value) {
             for (int d = depth / 4 * 4; d < depth; d++) {
                 volume_set(new_vol, x, y, d, value);
             }
-            original
-            for (int d = 0; d < depth; d++) {
-                volume_set(new_vol, x, y, d, value);
-            }
+//            original
+//            for (int d = 0; d < depth; d++) {
+//                volume_set(new_vol, x, y, d, value);
+//            }
 
 
             //Unrolling
@@ -79,10 +79,10 @@ void copy_volume(volume_t *dest, volume_t *src) {
             for (int d = dest->depth / 4 * 4; d < dest->depth; d++) {
                 volume_set(dest, x, y, d, volume_get(src, x, y, d));
             }
-             original
-            for (int d = 0; d < dest->depth; d++) {
-                volume_set(dest, x, y, d, volume_get(src, x, y, d));
-            }
+//             original
+//            for (int d = 0; d < dest->depth; d++) {
+//                volume_set(dest, x, y, d, volume_get(src, x, y, d));
+//            }
 
             // Unrolling
 //            for(int d = 0; d < dest->depth/4 * 4; d += 4){
