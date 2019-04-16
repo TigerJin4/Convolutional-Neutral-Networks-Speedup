@@ -237,12 +237,16 @@ void conv_load(conv_layer_t *l, const char *file_name) {
     assert(filters == l->output_depth);
 
     for(int f = 0; f < filters; f++) {
+        double* weights = l->filters[f]->weights;
+        int depth = l->filters[f]->depth;
+        int width = l->filters[f]->width
         for (int x = 0; x < filter_width; x++) {
             for (int y = 0; y < filter_height; y++) {
                 for (int d = 0; d < depth; d++) {
                     double val;
                     fscanf(fin, "%lf", &val);
-                    volume_set(l->filters[f], x, y, d, val);
+                    //volume_set(l->filters[f], x, y, d, val);
+                    weights[((width * y) + x) * depth + d] = val;
                 }
             }
         }
