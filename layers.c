@@ -180,7 +180,7 @@ void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int st
                                         b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 16));
                                         c = _mm256_mul_pd(a, b);
                                         result = _mm256_add_pd(result, c);
-                                        double* res = (double*) calloc(5, sizeof(double));
+                                        double* res = (double*) calloc(4, sizeof(double));
                                         _mm256_storeu_pd(res, result);
                                         sum += res[0] + res[1] + res[2] + res[3];
                                         free(res);
