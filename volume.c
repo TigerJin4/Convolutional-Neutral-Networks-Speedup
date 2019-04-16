@@ -68,9 +68,6 @@ void copy_volume(volume_t *dest, volume_t *src) {
     assert(dest->height == src->height);
     assert(dest->depth == src->depth);
 
-    double* s_weights = src->weights;
-    int s_width = src->width;
-    int s_depth = src->depth;
 
     for (int x = 0; x < dest->width; x++) {
         for (int y = 0; y < dest->height; y++) {
@@ -84,27 +81,22 @@ void copy_volume(volume_t *dest, volume_t *src) {
 //            }
 
 //             original
-            for (int d = 0; d < dest->depth; d++) {
-//                double v = s_weights[((s_width * y) + x) * s_depth + d];
-//
-//                volume_set(dest, x, y, d, v);
+//            for (int d = 0; d < dest->depth; d++) {
+//                volume_set(dest, x, y, d, volume_get(src, x, y, d));
+//            }
+
+            // Unrolling
+            for(int d = 0; d < dest->depth/4 * 4; d += 4){
+                volume_set(dest, x, y, d, volume_get(src, x, y, d));
+                volume_set(dest, x, y, d+1, volume_get(src, x, y, d+1));
+                volume_set(dest, x, y, d+2, volume_get(src, x, y, d+2));
+                volume_set(dest, x, y, d+3, volume_get(src, x, y, d+3));
+            }
+            for (int d = dest->depth/4 * 4; d < dest->depth; d ++) {
                 volume_set(dest, x, y, d, volume_get(src, x, y, d));
             }
         }
     }
-
-            // Unrolling
-//            for(int d = 0; d < dest->depth/4 * 4; d += 4){
-//                volume_set(dest, x, y, d, volume_get(src, x, y, d));
-//                volume_set(dest, x, y, d+1, volume_get(src, x, y, d+1));
-//                volume_set(dest, x, y, d+2, volume_get(src, x, y, d+2));
-//                volume_set(dest, x, y, d+3, volume_get(src, x, y, d+3));
-//            }
-//            for (int d = dest->depth/4 * 4; d < dest->depth; d ++) {
-//                volume_set(dest, x, y, d, volume_get(src, x, y, d));
-//            }
-//        }
-//    }
 
 //    __m128i sum = _mm_setzero_si128();
 //    for(unsigned int i = 0; i < NUM_ELEMS / 4 * 4; i += 4) {
