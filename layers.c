@@ -277,7 +277,7 @@ void relu_forward(relu_layer_t *l, volume_t **inputs, volume_t **outputs, int st
                 for (int d = 0; d < depth; d++) {
                     //input_weights[((input_width * y) + x) * input_height + d]
                     //double value = (input_weights[((input_width * y) + x) * input_height + d] < 0.0) ? 0.0 : input_weights[((input_width * y) + x) * input_height + d];
-                    double value = (volume_get(inputs, x, y, d) < 0.0) ? 0.0 : volume_get(inputs, x, y, d);
+                    double value = (volume_get(input_vol, x, y, d) < 0.0) ? 0.0 : volume_get(input_vol, x, y, d);
                     volume_set(outputs[i], x, y, d, value);
                 }
             }
