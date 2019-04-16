@@ -419,7 +419,7 @@ void softmax_forward(softmax_layer_t *l, volume_t **inputs, volume_t **outputs, 
         // Compute exponentials in a numerically stable way
         double total = 0.0;
 
-        double* in_weights = in->weights
+        double* in_weights = in->weights;
 
         for(int i = 0; i < l->output_depth; i++) {
             double e = exp(in_weights[i] - amax);
