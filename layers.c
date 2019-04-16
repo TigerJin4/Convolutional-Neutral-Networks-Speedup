@@ -205,10 +205,13 @@ relu_layer_t *make_relu_layer(int input_width, int input_height, int input_depth
 // Applies the Rectifier Linear Unit (ReLU) function to the input, which sets
 // output(x, y, d) to max(0.0, input(x, y, d)).
 void relu_forward(relu_layer_t *l, volume_t **inputs, volume_t **outputs, int start, int end) {
+    int width = l->input_width;
+    int height = l->input_height;
+    int depth = l->input_depth;
     for (int i = start; i <= end; i++) {
-        for (int x = 0; x < l->input_width; x++) {
-            for (int y = 0; y < l->input_height; y++) {
-                for (int d = 0; d < l->input_depth; d++) {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                for (int d = 0; d < depth; d++) {
                     double value = (volume_get(inputs[i], x, y, d) < 0.0) ? 0.0 : volume_get(inputs[i], x, y, d);
                     volume_set(outputs[i], x, y, d, value);
                 }
@@ -252,20 +255,32 @@ void pool_forward(pool_layer_t *l, volume_t **inputs, volume_t **outputs, int st
     for (int i = start; i <= end; i++) {
         volume_t *in = inputs[i];
         volume_t *out = outputs[i];
+        int in_height = in->height;
+        int in_width = in->width;
+        int output_depth = l->output_depth;
+        int output_width = l->output_width;
+        int output_height = l->output_height;
+        int stride = l->stride;
+        int pad = l->pad;
+        int pool_width = l->pool_width;
+        int pool_height = l->pool_height;
+
+
+
 
         int n = 0;
-        for(int d = 0; d < l->output_depth; d++) {
-            int x = -l->pad;
-            for(int out_x = 0; out_x < l->output_width; x += l->stride, out_x++) {
-                int y = -l->pad;
-                for(int out_y = 0; out_y < l->output_height; y += l->stride, out_y++) {
+        for(int d = 0; d < output_depth; d++) {
+            int x = -pad;
+            for(int out_x = 0; out_x < output_width; x += stride, out_x++) {
+                int y = -pad;
+                for(int out_y = 0; out_y < output_height; y += stride, out_y++) {
 
                     double max = -INFINITY;
-                    for(int fx = 0; fx < l->pool_width; fx++) {
-                        for(int fy = 0; fy < l->pool_height; fy++) {
+                    for(int fx = 0; fx < pool_width; fx++) {
+                        for(int fy = 0; fy < pool_height; fy++) {
                             int in_y = y + fy;
                             int in_x = x + fx;
-                            if(in_x >= 0 && in_x < in->width && in_y >= 0 && in_y < in->height) {
+                            if(in_x >= 0 && in_x < in_width && in_y >= 0 && in_y < in_height) {
                                 double v = volume_get(in, in_x, in_y, d);
                                 if(v > max) {
                                     max = v;
@@ -312,6 +327,8 @@ void fc_forward(fc_layer_t *l, volume_t **inputs, volume_t **outputs, int start,
     for (int j = start; j <= end; j++) {
         volume_t *in = inputs[j];
         volume_t *out = outputs[j];
+
+
 
         for(int i = 0; i < l->output_depth;i++) {
             double dot = 0.0;
