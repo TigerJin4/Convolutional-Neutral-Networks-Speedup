@@ -182,7 +182,7 @@ void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int st
                                         result = _mm256_add_pd(result, c);
                                         double* res = (double*) calloc(5, sizeof(double));
                                         _mm256_storeu_pd(res, result);
-                                        sum += res[0] + res[1] + res[2] + res[3] + res[4];
+                                        sum += res[0] + res[1] + res[2] + res[3];
                                         free(res);
                                     }
 
