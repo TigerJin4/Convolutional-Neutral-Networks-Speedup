@@ -188,7 +188,7 @@ void net_classify(network_t *net, volume_t **input, double **likelihoods, int n)
                 likelihoods[i][j+2] = b[11][0]->weights[j+2];
                 likelihoods[i][j+3] = b[11][0]->weights[j+3];
             }
-            for(int d = NUM_CLASSES/4*4; d < NUM_CLASSES; d++){
+            for(int j = NUM_CLASSES/4*4; j < NUM_CLASSES; j++){
                 likelihoods[i][j] = b[11][0]->weights[j];
             }
 
@@ -201,7 +201,7 @@ void net_classify(network_t *net, volume_t **input, double **likelihoods, int n)
                 likelihoods[i+1][j+2] = b[11][0]->weights[j+2];
                 likelihoods[i+1][j+3] = b[11][0]->weights[j+3];
             }
-            for(int d = NUM_CLASSES/4*4; d < NUM_CLASSES; d++){
+            for(int j = NUM_CLASSES/4*4; j < NUM_CLASSES; j++){
                 likelihoods[i+1][j] = b[11][0]->weights[j];
             }
 
@@ -214,7 +214,7 @@ void net_classify(network_t *net, volume_t **input, double **likelihoods, int n)
                 likelihoods[i+2][j+2] = b[11][0]->weights[j+2];
                 likelihoods[i+2][j+3] = b[11][0]->weights[j+3];
             }
-            for(int d = NUM_CLASSES/4*4; d < NUM_CLASSES; d++){
+            for(int j = NUM_CLASSES/4*4; j < NUM_CLASSES; j++){
                 likelihoods[i+2][j] = b[11][0]->weights[j];
             }
 
@@ -227,7 +227,7 @@ void net_classify(network_t *net, volume_t **input, double **likelihoods, int n)
                 likelihoods[i+3][j+2] = b[11][0]->weights[j+2];
                 likelihoods[i+3][j+3] = b[11][0]->weights[j+3];
             }
-            for(int d = NUM_CLASSES/4*4; d < NUM_CLASSES; d++){
+            for(int j = NUM_CLASSES/4*4; j < NUM_CLASSES; j++){
                 likelihoods[i+3][j] = b[11][0]->weights[j];
             }
         }
