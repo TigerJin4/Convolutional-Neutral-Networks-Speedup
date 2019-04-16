@@ -126,10 +126,10 @@ void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int st
                                         __m256d b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 0));
                                         __m256d c = _mm256_mul_pd(a, b);
                                         result = _mm256_add_pd(result, c);
-                                        double* res = (double*) calloc(4, sizeof(double));
-                                        _mm256_storeu_pd(res, result);
-                                        sum += res[0] + res[1] + res[2];
-                                        free(res);
+//                                        double* res = (double*) calloc(4, sizeof(double));
+//                                        _mm256_storeu_pd(res, result);
+//                                        sum += res[0] + res[1] + res[2];
+//                                        free(res);
                                     }
                                     else if (filter->depth == 16){
                                         __m256d a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 0));
@@ -152,10 +152,10 @@ void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int st
                                         c = _mm256_mul_pd(a, b);
                                         result = _mm256_add_pd(result, c);
 
-                                        double* res = (double*) calloc(4, sizeof(double));
-                                        _mm256_storeu_pd(res, result);
-                                        sum += res[0] + res[1] + res[2] + res[3];
-                                        free(res);
+//                                        double* res = (double*) calloc(4, sizeof(double));
+//                                        _mm256_storeu_pd(res, result);
+//                                        sum += res[0] + res[1] + res[2] + res[3];
+//                                        free(res);
                                     }
                                     else if (filter->depth == 20){
                                         __m256d a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 0));
@@ -182,10 +182,10 @@ void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int st
                                         b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 16));
                                         c = _mm256_mul_pd(a, b);
                                         result = _mm256_add_pd(result, c);
-                                        double* res = (double*) calloc(4, sizeof(double));
-                                        _mm256_storeu_pd(res, result);
-                                        sum += res[0] + res[1] + res[2] + res[3];
-                                        free(res);
+//                                        double* res = (double*) calloc(4, sizeof(double));
+//                                        _mm256_storeu_pd(res, result);
+//                                        sum += res[0] + res[1] + res[2] + res[3];
+//                                        free(res);
                                     }
 
 //                                    for(int fd = 0; fd < filter->depth / 4 * 4; fd += 4) {
