@@ -228,13 +228,13 @@ pool_layer_t *make_pool_layer(int input_width, int input_height, int input_depth
     l->input_width = input_width;
     l->input_height = input_height;
 
-    l->pool_height = l->pool_width;
+    l->pool_height = pool_width;
     l->stride = stride;
     l->pad = 0;
 
     l->output_depth = input_depth;
-    l->output_width = floor((l->input_width + l->pad * 2 - l->pool_width) / l->stride + 1);
-    l->output_height = floor((l->input_height + l->pad * 2 - l->pool_height) / l->stride + 1);
+    l->output_width = floor((input_width + 0 * 2 - pool_width) / stride + 1);
+    l->output_height = floor((input_height + 0 * 2 - l->pool_height) / stride + 1);
 
     return l;
 }
@@ -305,7 +305,7 @@ fc_layer_t *make_fc_layer(int input_width, int input_height, int input_depth, in
     l->input_width = input_width;
     l->input_height = input_height;
 
-    l->num_inputs = l->input_width * l->input_height * l->input_depth;
+    l->num_inputs = input_width * input_height * input_depth;
     l->output_width = 1;
     l->output_height = 1;
 
@@ -327,24 +327,25 @@ void fc_forward(fc_layer_t *l, volume_t **inputs, volume_t **outputs, int start,
     for (int j = start; j <= end; j++) {
         volume_t *in = inputs[j];
         volume_t *out = outputs[j];
-
+        double* in_weights = in->weights;
 
 
         for(int i = 0; i < l->output_depth;i++) {
             double dot = 0.0;
+            double* fweights = l->filters[i]->weights;
             //original
 //            for(int d = 0; d < l->num_inputs; d++) {
 //                dot += in->weights[d] * l->filters[i]->weights[d];
 //            }
             // Unrolling
             for(int d = 0; d < l->num_inputs/4*4; d+=4){
-                dot += in->weights[d] * l->filters[i]->weights[d];
-                dot += in->weights[d+1] * l->filters[i]->weights[d+1];
-                dot += in->weights[d+2] * l->filters[i]->weights[d+2];
-                dot += in->weights[d+3] * l->filters[i]->weights[d+3];
+                dot += in_weights[d] * fweights[d];
+                dot += in_weights[d+1] * fweights[d+1];
+                dot += in_weights[d+2] * fweights[d+2];
+                dot += in_weights[d+3] * fweights[d+3];
             }
             for(int d = l->num_inputs/4*4; d < l->num_inputs; d++){
-                dot += in->weights[d] * l->filters[i]->weights[d];
+                dot += in->weights[d] * fweights[d];
             }
             dot += l->biases->weights[i];
             out->weights[i] = dot;
@@ -384,7 +385,7 @@ softmax_layer_t *make_softmax_layer(int input_width, int input_height, int input
 
     l->output_width = 1;
     l->output_height = 1;
-    l->output_depth = l->input_width * l->input_height * l->input_depth;
+    l->output_depth = input_width * input_height * input_depth;
 
     l->likelihoods = (double*) malloc(sizeof(double) * l->output_depth);
 
@@ -417,8 +418,11 @@ void softmax_forward(softmax_layer_t *l, volume_t **inputs, volume_t **outputs, 
 
         // Compute exponentials in a numerically stable way
         double total = 0.0;
+
+        double* in_weights = in->weights
+
         for(int i = 0; i < l->output_depth; i++) {
-            double e = exp(in->weights[i] - amax);
+            double e = exp(in_weights[i] - amax);
             total += e;
             likelihoods[i] = e;
         }
