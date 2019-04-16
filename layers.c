@@ -121,13 +121,15 @@ void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int st
 //                                    }
 
 //                                    __m256d result = _mm256_setzero_pd();
+                                double sum_array[4];
                                 if (filter->depth == 3){
                                     __m256d a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 0));
                                     __m256d b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 0));
                                     __m256d c = _mm256_mul_pd(a, b);
                                     result = _mm256_add_pd(result, c);
 //                                        double* res = (double*) calloc(4, sizeof(double));
-//                                        _mm256_storeu_pd(res, result);
+                                    _mm256_storeu_pd(sum_array, result);
+                                    sum += sum_array[0] + sum_array[1] + sum_array[2];
 //                                        sum += res[0] + res[1] + res[2];
 //                                        free(res);
                                 }
@@ -151,6 +153,9 @@ void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int st
                                     b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 12));
                                     c = _mm256_mul_pd(a, b);
                                     result = _mm256_add_pd(result, c);
+
+                                    _mm256_storeu_pd(sum_array, result);
+                                    sum += sum_array[0] + sum_array[1] + sum_array[2]+sum_array[3];
 
 //                                        double* res = (double*) calloc(4, sizeof(double));
 //                                        _mm256_storeu_pd(res, result);
@@ -182,6 +187,9 @@ void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int st
                                     b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 16));
                                     c = _mm256_mul_pd(a, b);
                                     result = _mm256_add_pd(result, c);
+
+                                    _mm256_storeu_pd(sum_array, result);
+                                    sum += sum_array[0] + sum_array[1] + sum_array[2]+sum_array[3];
 //                                        double* res = (double*) calloc(4, sizeof(double));
 //                                        _mm256_storeu_pd(res, result);
 //                                        sum += res[0] + res[1] + res[2] + res[3];
@@ -202,10 +210,10 @@ void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int st
                             }
                         }
                     }
-                    double* res = (double*) calloc(4, sizeof(double));
-                    _mm256_storeu_pd(res, result);
-                    sum += res[0] + res[1] + res[2] + res[3];
-                    free(res);
+//                    double* res = (double*) calloc(4, sizeof(double));
+//                    _mm256_storeu_pd(res, result);
+//                    sum += res[0] + res[1] + res[2] + res[3];
+//                    free(res);
 
                     sum += l->biases->weights[f];
                     volume_set(out, out_x, out_y, f, sum);

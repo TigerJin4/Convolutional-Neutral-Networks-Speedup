@@ -29,8 +29,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/layers.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="637">
-              <caret line="503" column="1" selection-start-line="503" selection-start-column="1" selection-end-line="503" selection-end-column="1" />
+            <state relative-caret-position="458">
+              <caret line="212" column="22" selection-start-line="212" selection-start-column="22" selection-end-line="215" selection-end-column="32" />
               <folding>
                 <element signature="e#126#145#0" expanded="true" />
                 <element signature="e#216#261#0" expanded="true" />
@@ -183,12 +183,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1555309559841</updated>
-      <workItem from="1555309561925" duration="38875000" />
+      <workItem from="1555309561925" duration="39293000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="38875000" />
+    <option name="totallyTimeSpent" value="39293000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="542" y="0" width="898" height="900" extended-state="0" />
@@ -272,8 +272,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/layers.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="637">
-          <caret line="503" column="1" selection-start-line="503" selection-start-column="1" selection-end-line="503" selection-end-column="1" />
+        <state relative-caret-position="458">
+          <caret line="212" column="22" selection-start-line="212" selection-start-column="22" selection-end-line="215" selection-end-column="32" />
           <folding>
             <element signature="e#126#145#0" expanded="true" />
             <element signature="e#216#261#0" expanded="true" />
