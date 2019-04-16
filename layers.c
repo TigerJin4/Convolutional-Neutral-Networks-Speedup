@@ -276,7 +276,8 @@ void relu_forward(relu_layer_t *l, volume_t **inputs, volume_t **outputs, int st
             for (int y = 0; y < height; y++) {
                 for (int d = 0; d < depth; d++) {
                     //input_weights[((input_width * y) + x) * input_height + d]
-                    double value = (input_weights[((input_width * y) + x) * input_height + d] < 0.0) ? 0.0 : input_weights[((input_width * y) + x) * input_height + d];
+                    //double value = (input_weights[((input_width * y) + x) * input_height + d] < 0.0) ? 0.0 : input_weights[((input_width * y) + x) * input_height + d];
+                    double value = (volume_get(inputs, x, y, d) < 0.0) ? 0.0 : volume_get(inputs, x, y, d);
                     volume_set(outputs[i], x, y, d, value);
                 }
             }
@@ -321,6 +322,7 @@ void pool_forward(pool_layer_t *l, volume_t **inputs, volume_t **outputs, int st
         volume_t *out = outputs[i];
         int in_height = in->height;
         int in_width = in->width;
+        int in_depth = in->depth;
         double* in_weights = in->weights;
         int output_depth = l->output_depth;
         int output_width = l->output_width;
@@ -345,7 +347,8 @@ void pool_forward(pool_layer_t *l, volume_t **inputs, volume_t **outputs, int st
                             int in_y = y + fy;
                             int in_x = x + fx;
                             if(in_x >= 0 && in_x < in_width && in_y >= 0 && in_y < in_height) {
-                                double v = in_weights[((in_width * in_y) + in_x) * in->depth + d];
+                                //double v = in_weights[((in_width * in_y) + in_x) * in_depth + d];
+                                double v = volume_get(in, x, y, d);
                                 if(v > max) {
                                     max = v;
                                 }

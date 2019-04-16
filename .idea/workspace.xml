@@ -31,7 +31,7 @@
         <entry file="file://$PROJECT_DIR$/layers.c">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="242">
-              <caret line="119" column="59" selection-start-line="119" selection-start-column="49" selection-end-line="119" selection-end-column="59" />
+              <caret line="461" column="56" selection-start-line="461" selection-start-column="48" selection-end-line="461" selection-end-column="56" />
             </state>
           </provider>
         </entry>
@@ -39,8 +39,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/volume.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="182">
-              <caret line="13" column="16" lean-forward="true" selection-start-line="13" selection-start-column="16" selection-end-line="13" selection-end-column="16" />
+            <state relative-caret-position="1350">
+              <caret line="90" column="68" selection-start-line="90" selection-start-column="68" selection-end-line="90" selection-end-column="68" />
               <folding>
                 <element signature="e#108#127#0" expanded="true" />
                 <element signature="e#198#243#0" expanded="true" />
@@ -95,6 +95,7 @@
       <find>in-&gt;</find>
       <find>curr</find>
       <find>volume_get</find>
+      <find>weights[</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -174,12 +175,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1555309559841</updated>
-      <workItem from="1555309561925" duration="36173000" />
+      <workItem from="1555309561925" duration="36967000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="36173000" />
+    <option name="totallyTimeSpent" value="36967000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -242,7 +243,7 @@
     <entry file="file://$PROJECT_DIR$/layers.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="242">
-          <caret line="119" column="59" selection-start-line="119" selection-start-column="49" selection-end-line="119" selection-end-column="59" />
+          <caret line="461" column="56" selection-start-line="461" selection-start-column="48" selection-end-line="461" selection-end-column="56" />
         </state>
       </provider>
     </entry>
@@ -255,8 +256,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/volume.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="182">
-          <caret line="13" column="16" lean-forward="true" selection-start-line="13" selection-start-column="16" selection-end-line="13" selection-end-column="16" />
+        <state relative-caret-position="1350">
+          <caret line="90" column="68" selection-start-line="90" selection-start-column="68" selection-end-line="90" selection-end-column="68" />
           <folding>
             <element signature="e#108#127#0" expanded="true" />
             <element signature="e#198#243#0" expanded="true" />
