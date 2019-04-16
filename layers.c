@@ -239,7 +239,7 @@ void conv_load(conv_layer_t *l, const char *file_name) {
     for(int f = 0; f < filters; f++) {
         double* weights = l->filters[f]->weights;
         int depth = l->filters[f]->depth;
-        int width = l->filters[f]->width
+        int width = l->filters[f]->width;
         for (int x = 0; x < filter_width; x++) {
             for (int y = 0; y < filter_height; y++) {
                 for (int d = 0; d < depth; d++) {
