@@ -88,11 +88,20 @@ void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int st
         for (int i = start; i <= end; i++) {
             volume_t *in = inputs[i];
             volume_t *out = outputs[i];
+            double in_width = in->width;
+            double in_weights = in->weights;
+            double in_depth = in->depth;
+            double in_height = in->height;
+
 
             int stride = l->stride;
 
             for (int f = 0; f < l->output_depth; f++) {
                 volume_t *filter = l->filters[f];
+                double f_weights = filter->weights;
+                double f_width = filter->width;
+                double f_depth = filter->depth;
+                double f_height = filter->height;
                 int y = -l->pad;
                 for (int out_y = 0; out_y < l->output_height; y += stride, out_y++) {
                     int x = -l->pad;
@@ -101,23 +110,23 @@ void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int st
                         // Take sum of element-wise product
                         double sum = 0.0;
                         __m256d result = _mm256_setzero_pd();
-                        for (int fy = 0; fy < filter->height; fy++) {
+                        for (int fy = 0; fy < f_height; fy++) {
                             int in_y = y + fy;
-                            for (int fx = 0; fx < filter->width; fx++) {
+                            for (int fx = 0; fx < f_width; fx++) {
                                 int in_x = x + fx;
-                                if (in_y >= 0 && in_y < in->height && in_x >= 0 && in_x < in->width) {
+                                if (in_y >= 0 && in_y < in_height && in_x >= 0 && in_x < in_width) {
                                     //original
 //                                    for (int fd = 0; fd < filter->depth; fd++) {
 //                                        sum += volume_get(filter, fx, fy, fd) * volume_get(in, in_x, in_y, fd);
 //                                    }
                                     for(int fd = 0; fd < filter->depth / 4 * 4; fd += 4) {
-                                        __m256d a = _mm256_loadu_pd(in->weights+(((in->width * in_y) + in_x) * in->depth + fd));
-                                        __m256d b = _mm256_loadu_pd(filter->weights+(((filter->width * fy) + fx) * filter->depth + fd));
+                                        __m256d a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + fd));
+                                        __m256d b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + fd));
                                         __m256d c = _mm256_mul_pd(a, b);
                                         result = _mm256_add_pd(result, c);
                                     }
 
-                                    for (int fd = filter->depth / 4 * 4; fd < filter->depth; fd++) {
+                                    for (int fd = f_depth / 4 * 4; fd < f_depth; fd++) {
                                         sum += volume_get(filter, fx, fy, fd) * volume_get(in, in_x, in_y, fd);
                                     }
 
