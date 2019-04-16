@@ -77,6 +77,10 @@ void copy_volume(volume_t *dest, volume_t *src) {
     int s_width = src->width;
     int s_depth = src->depth;
 
+    double * d_weights = dest->weights;
+    int d_width = dest->width;
+    int d_depth = dest->depth;
+
 
 
 
@@ -93,7 +97,10 @@ void copy_volume(volume_t *dest, volume_t *src) {
 
 //             original
             for (int d = 0; d < dest->depth; d++) {
-                volume_set(dest, x, y, d, s_weights[((s_width * y) + x) * s_depth + d]);
+                //volume_set(dest, x, y, d, s_weights[((s_width * y) + x) * s_depth + d]);
+
+                d_weights[((d_width * y) + x) * d_depth + d] = s_weights[((s_width * y) + x) * s_depth + d];
+
                 //volume_set(dest, x, y, d, volume_get(src, x, y, d));
             }
 
