@@ -109,7 +109,7 @@ void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int st
 
                         // Take sum of element-wise product
                         double sum = 0.0;
-                        __m256d result = _mm256_setzero_pd();
+//                        __m256d result = _mm256_setzero_pd();
                         for (int fy = 0; fy < f_height; fy++) {
                             int in_y = y + fy;
                             for (int fx = 0; fx < f_width; fx++) {
@@ -119,6 +119,7 @@ void conv_forward(conv_layer_t *l, volume_t **inputs, volume_t **outputs, int st
 //                                    for (int fd = 0; fd < filter->depth; fd++) {
 //                                        sum += volume_get(filter, fx, fy, fd) * volume_get(in, in_x, in_y, fd);
 //                                    }
+                                    __m256d result = _mm256_setzero_pd();
                                     if (filter->depth == 3){
                                         __m256d a = _mm256_loadu_pd(in_weights+(((in_width * in_y) + in_x) * in_depth + 0));
                                         __m256d b = _mm256_loadu_pd(f_weights+(((f_width * fy) + fx) * f_depth + 0));
