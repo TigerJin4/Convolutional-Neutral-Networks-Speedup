@@ -96,24 +96,24 @@ void copy_volume(volume_t *dest, volume_t *src) {
 //            }
 
 //             original
-            for (int d = 0; d < dest->depth; d++) {
-                //volume_set(dest, x, y, d, s_weights[((s_width * y) + x) * s_depth + d]);
-
-                d_weights[((d_width * y) + x) * d_depth + d] = s_weights[((s_width * y) + x) * s_depth + d];
-
-                //volume_set(dest, x, y, d, volume_get(src, x, y, d));
-            }
+//            for (int d = 0; d < dest->depth; d++) {
+//                //volume_set(dest, x, y, d, s_weights[((s_width * y) + x) * s_depth + d]);
+//
+//                d_weights[((d_width * y) + x) * d_depth + d] = s_weights[((s_width * y) + x) * s_depth + d];
+//
+//                //volume_set(dest, x, y, d, volume_get(src, x, y, d));
+//            }
 
             // Unrolling
-//            for(int d = 0; d < dest->depth/4 * 4; d += 4){
-//                volume_set(dest, x, y, d, volume_get(src, x, y, d));
-//                volume_set(dest, x, y, d+1, volume_get(src, x, y, d+1));
-//                volume_set(dest, x, y, d+2, volume_get(src, x, y, d+2));
-//                volume_set(dest, x, y, d+3, volume_get(src, x, y, d+3));
-//            }
-//            for (int d = dest->depth/4 * 4; d < dest->depth; d ++) {
-//                volume_set(dest, x, y, d, volume_get(src, x, y, d));
-//            }
+            for(int d = 0; d < dest->depth/4 * 4; d += 4){
+                d_weights[((d_width * y) + x) * d_depth + d] = s_weights[((s_width * y) + x) * s_depth + d];
+                d_weights[((d_width * y) + x) * d_depth + d+1] = s_weights[((s_width * y) + x) * s_depth + d+1];
+                d_weights[((d_width * y) + x) * d_depth + d+2] = s_weights[((s_width * y) + x) * s_depth + d+2];
+                d_weights[((d_width * y) + x) * d_depth + d+3] = s_weights[((s_width * y) + x) * s_depth + d+3];
+            }
+            for (int d = dest->depth/4 * 4; d < dest->depth; d ++) {
+                d_weights[((d_width * y) + x) * d_depth + d+3] = s_weights[((s_width * y) + x) * s_depth + d+3];
+            }
         }
     }
 

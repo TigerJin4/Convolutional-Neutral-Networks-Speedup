@@ -9,10 +9,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="584f4e8e-b00d-4ef2-80ea-18fb9909d907" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/layers.c" beforeDir="false" afterPath="$PROJECT_DIR$/layers.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volume.c" beforeDir="false" afterPath="$PROJECT_DIR$/volume.c" afterDir="false" />
-    </list>
+    <list default="true" id="584f4e8e-b00d-4ef2-80ea-18fb9909d907" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -185,12 +182,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1555309559841</updated>
-      <workItem from="1555309561925" duration="45537000" />
+      <workItem from="1555309561925" duration="45748000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="45537000" />
+    <option name="totallyTimeSpent" value="45748000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
