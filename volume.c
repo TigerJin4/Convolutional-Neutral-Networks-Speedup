@@ -88,6 +88,7 @@ void copy_volume(volume_t *dest, volume_t *src) {
                 double v = s_weights[((s_width * y) + x) * s_depth + d];
                 volume_set(dest, x, y, d, v);
             }
+        }
 
             // Unrolling
 //            for(int d = 0; d < dest->depth/4 * 4; d += 4){
