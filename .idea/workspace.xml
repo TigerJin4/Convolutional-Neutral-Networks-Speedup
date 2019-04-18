@@ -10,7 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="584f4e8e-b00d-4ef2-80ea-18fb9909d907" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/layers.c" beforeDir="false" afterPath="$PROJECT_DIR$/layers.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/volume.c" beforeDir="false" afterPath="$PROJECT_DIR$/volume.c" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -26,11 +26,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/layers.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="307">
-              <caret line="204" column="75" selection-start-line="204" selection-start-column="75" selection-end-line="204" selection-end-column="75" />
+            <state relative-caret-position="-5506">
+              <caret line="115" column="57" lean-forward="true" selection-start-line="115" selection-start-column="37" selection-end-line="115" selection-end-column="57" />
               <folding>
                 <element signature="e#126#145#0" expanded="true" />
                 <element signature="e#216#261#0" expanded="true" />
@@ -42,8 +42,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/volume.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1770">
-              <caret line="118" selection-start-line="118" selection-end-line="118" />
+            <state relative-caret-position="500">
+              <caret line="58" column="72" selection-start-line="58" selection-start-column="72" selection-end-line="58" selection-end-column="72" />
               <folding>
                 <element signature="e#108#127#0" expanded="true" />
                 <element signature="e#198#243#0" expanded="true" />
@@ -52,10 +52,10 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/network.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="487">
+            <state relative-caret-position="692">
               <caret line="241" column="36" selection-start-line="241" selection-start-column="33" selection-end-line="241" selection-end-column="36" />
               <folding>
                 <element signature="e#69#88#0" expanded="true" />
@@ -68,7 +68,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/layers.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="138">
+            <state relative-caret-position="275">
               <caret line="118" column="47" selection-start-line="118" selection-start-column="47" selection-end-line="118" selection-end-column="47" />
             </state>
           </provider>
@@ -114,8 +114,8 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/network.c" />
-        <option value="$PROJECT_DIR$/volume.c" />
         <option value="$PROJECT_DIR$/layers.c" />
+        <option value="$PROJECT_DIR$/volume.c" />
       </list>
     </option>
   </component>
@@ -129,7 +129,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="20" />
     <option name="y" value="43" />
     <option name="width" value="1400" />
@@ -184,15 +184,15 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1555309559841</updated>
-      <workItem from="1555309561925" duration="48432000" />
+      <workItem from="1555309561925" duration="51082000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="48432000" />
+    <option name="totallyTimeSpent" value="51082000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <frame x="0" y="23" width="1440" height="821" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Favorites" sideWeight="0.5007215" side_tool="true" weight="0.2496318" />
@@ -239,31 +239,31 @@
         <state relative-caret-position="-221" />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/network.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/layers.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
+        <state relative-caret-position="275">
           <caret line="118" column="47" selection-start-line="118" selection-start-column="47" selection-end-line="118" selection-end-column="47" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/network.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/network.c">
+    <entry file="file://$PROJECT_DIR$/layers.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="487">
-          <caret line="241" column="36" selection-start-line="241" selection-start-column="33" selection-end-line="241" selection-end-column="36" />
+        <state relative-caret-position="-5506">
+          <caret line="115" column="57" lean-forward="true" selection-start-line="115" selection-start-column="37" selection-end-line="115" selection-end-column="57" />
           <folding>
-            <element signature="e#69#88#0" expanded="true" />
-            <element signature="e#159#204#0" expanded="true" />
+            <element signature="e#126#145#0" expanded="true" />
+            <element signature="e#216#261#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/volume.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1770">
-          <caret line="118" selection-start-line="118" selection-end-line="118" />
+        <state relative-caret-position="500">
+          <caret line="58" column="72" selection-start-line="58" selection-start-column="72" selection-end-line="58" selection-end-column="72" />
           <folding>
             <element signature="e#108#127#0" expanded="true" />
             <element signature="e#198#243#0" expanded="true" />
@@ -271,13 +271,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/layers.c">
+    <entry file="file://$PROJECT_DIR$/network.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="307">
-          <caret line="204" column="75" selection-start-line="204" selection-start-column="75" selection-end-line="204" selection-end-column="75" />
+        <state relative-caret-position="692">
+          <caret line="241" column="36" selection-start-line="241" selection-start-column="33" selection-end-line="241" selection-end-column="36" />
           <folding>
-            <element signature="e#126#145#0" expanded="true" />
-            <element signature="e#216#261#0" expanded="true" />
+            <element signature="e#69#88#0" expanded="true" />
+            <element signature="e#159#204#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -57,7 +57,6 @@ volume_t *make_volume(int width, int height, int depth, double value) {
                 newvol_weights[((width * y) + x) * depth + d] = value;
                 newvol_weights[((width * y) + x) * depth + d+2] = value;
                 newvol_weights[((width * y) + x) * depth + d+3] = value;
-                newvol_weights[((width * y) + x) * depth + d+4] = value;
             }
             for (int d = depth/4 * 4; d < depth; d ++){
                 newvol_weights[((width * y) + x) * depth + d] = value;
